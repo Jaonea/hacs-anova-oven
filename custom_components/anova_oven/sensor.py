@@ -148,7 +148,7 @@ def sensor_descriptions(
         AnovaOvenSensorEntityDescription(
             key="fan_speed",
             device_class=SensorDeviceClass.ENUM,
-            options=[0, "min","mid","max"],
+            options=["min","mid","max"],
             translation_key="fan_speed",
             value_fn=lambda data: data.sensor.nodes.fan_speed,
             extra_state_attributes={},
