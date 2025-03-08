@@ -84,7 +84,7 @@ class AnovaOvenApi:
                                         sg = nodes["steamGenerators"]
                                         hum = (
                                             sg["relativeHumidity"]
-                                            if sg["mode"] == "idle"
+                                            if sg["mode"] == "relative-humidity"
                                             else sg[
                                                 snake_case_to_camel_case(sg["mode"])
                                             ]
@@ -115,12 +115,8 @@ class AnovaOvenApi:
                                                     ),
                                                     temperature_probe=APOSensor.Nodes.TemperatureProbe(
                                                         temperature=Temperature(
-                                                            celsius=tp["current"][
-                                                                "celsius"
-                                                            ],
-                                                            fahrenheit=tp["current"][
-                                                                "fahrenheit"
-                                                            ],
+                                                            celsius=tp["current"].get("celsius", 0)
+                                                            fahrenheit=tp["current"].get("fahrenheit", 0),
                                                         )
                                                         if "current" in tp
                                                         else None,
@@ -142,18 +138,18 @@ class AnovaOvenApi:
                                                         temperature=Temperature(
                                                             celsius=bulbs[
                                                                 bulbs["mode"]
-                                                            ]["current"]["celsius"],
+                                                            ]["current"].get("celsius", 0),
                                                             fahrenheit=bulbs[
                                                                 bulbs["mode"]
-                                                            ]["current"]["fahrenheit"],
+                                                            ]["current"].get("fahrenheit", 0),
                                                         ),
                                                         target_temperature=Temperature(
                                                             celsius=bulbs[
                                                                 bulbs["mode"]
-                                                            ]["setpoint"]["celsius"],
+                                                            ]["setpoint"].get("celsius", 0),
                                                             fahrenheit=bulbs[
                                                                 bulbs["mode"]
-                                                            ]["setpoint"]["fahrenheit"],
+                                                            ]["setpoint"].get("fahrenheit", 0),
                                                         ),
                                                         dosed=bulbs["wet"]["dosed"],
                                                         dose_failed=bulbs["wet"][
