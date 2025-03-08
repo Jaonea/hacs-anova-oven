@@ -113,7 +113,7 @@ class AnovaOvenApi:
                                                     ),
                                                     temperature_probe=APOSensor.Nodes.TemperatureProbe(
                                                         temperature=Temperature(
-                                                            celsius=tp["current"].get("celsius", 0)
+                                                            celsius=tp["current"].get("celsius", 0),
                                                             fahrenheit=tp["current"].get("fahrenheit", 0),
                                                         )
                                                         if "current" in tp
