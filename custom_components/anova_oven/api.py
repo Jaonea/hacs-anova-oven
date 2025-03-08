@@ -85,7 +85,7 @@ class AnovaOvenApi:
                                         hum = (
                                             sg["relativeHumidity"]
                                             if sg["mode"] == "relative-humidity"
-                                            else 0
+                                            else {"current": 0}
                                         )
                                         cook = state.get("cook", {})
                                         timer = nodes.get("timer", {})
