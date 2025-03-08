@@ -179,7 +179,7 @@ class AnovaOvenApi:
                                                     water_tank_empty=nodes["waterTank"][
                                                         "empty"
                                                     ],
-                                                    fan_speed=nodes["fan"]["speed"],
+                                                    fan_speed=nodes["fan"]["speed"] if nodes["fan"]["speed"].isnumeric() else 100,
                                                 ),
                                             ),
                                             stages=APOState.Stages(
