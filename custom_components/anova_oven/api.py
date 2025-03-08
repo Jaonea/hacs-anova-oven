@@ -174,7 +174,7 @@ class AnovaOvenApi:
                                                         initial=timer.get("initial"),
                                                         current=timer.get("current"),
                                                     ),
-                                                    lamp_on=nodes["lamp"]["on"],
+                                                    lamp_on=nodes["doorLamp"]["on"],
                                                     door_closed=nodes["door"]["closed"],
                                                     water_tank_empty=nodes["waterTank"][
                                                         "empty"
