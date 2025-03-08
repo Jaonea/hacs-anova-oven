@@ -23,6 +23,9 @@ from .util import dict_keys_to_camel_case, snake_case_to_camel_case, to_dict
 
 _LOGGER = logging.getLogger(__name__)
 
+def convert_celsius_to_fahrenheit(celsius):
+    fahrenheit = (float(celsius) * 9 / 5 + 32)
+    return fahrenheit
 
 class AnovaOvenApi:
     """A class to handle communicating with the anova api to get devices"""
@@ -114,13 +117,13 @@ class AnovaOvenApi:
                                                     temperature_probe=APOSensor.Nodes.TemperatureProbe(
                                                         temperature=Temperature(
                                                             celsius=tp["current"].get("celsius", 0),
-                                                            fahrenheit=tp["current"].get("fahrenheit", 0),
+                                                            fahrenheit=convert_celsius_to_fahrenheit(tp["current"].get("celsius", 0)),
                                                         )
                                                         if "current" in tp
                                                         else None,
                                                         target_temperature=Temperature(
                                                             celsius=tp["setpoint"].get("celsius", 0),
-                                                            fahrenheit=tp["setpoint"].get("fahrenheit", 0),
+                                                            fahrenheit=convert_celsius_to_fahrenheit(tp["setpoint"].get("celsius", 0)),
                                                         )
                                                         if "setpoint" in tp
                                                         else None,
@@ -133,17 +136,17 @@ class AnovaOvenApi:
                                                             celsius=bulbs[
                                                                 bulbs["mode"]
                                                             ]["current"].get("celsius", 0),
-                                                            fahrenheit=bulbs[
+                                                            fahrenheit=convert_celsius_to_fahrenheit(bulbs[
                                                                 bulbs["mode"]
-                                                            ]["current"].get("fahrenheit", 0),
+                                                            ]["current"].get("celsius", 0)),
                                                         ),
                                                         target_temperature=Temperature(
                                                             celsius=bulbs[
                                                                 bulbs["mode"]
                                                             ]["setpoint"].get("celsius", 0),
-                                                            fahrenheit=bulbs[
+                                                            fahrenheit=convert_celsius_to_fahrenheit(bulbs[
                                                                 bulbs["mode"]
-                                                            ]["setpoint"].get("fahrenheit", 0),
+                                                            ]["setpoint"].get("celsius", 0)),
                                                         ),
                                                         dosed=bulbs["wet"]["dosed"],
                                                         dose_failed=bulbs["wet"].get("doseFailed", False),
@@ -179,7 +182,7 @@ class AnovaOvenApi:
                                                     water_tank_empty=nodes["waterTank"][
                                                         "empty"
                                                     ],
-                                                    fan_speed=nodes["fan"]["speed"] if nodes["fan"]["speed"].isnumeric() else 100,
+                                                    fan_speed=nodes["fan"]["speed"] if nodes["fan"]["speed"].isnumeric() else 0,
                                                 ),
                                             ),
                                             stages=APOState.Stages(
