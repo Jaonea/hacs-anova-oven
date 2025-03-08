@@ -53,7 +53,8 @@ def sensor_descriptions(
         match unit_of_temperature:
             case AnovaUnitOfTemperature.FAHRENHEIT:
                 return x.fahrenheit
-            return x.celsius
+            case _:
+                return x.celsius
 
     return [
         AnovaOvenSensorEntityDescription(
