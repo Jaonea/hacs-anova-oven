@@ -90,7 +90,7 @@ class AnovaOvenApi:
                                         bulbs = nodes["temperatureBulbs"]
                                         he = nodes["heatingElements"]
                                         sg = nodes["steamGenerators"]
-                                        hum = steamModes.get(sg["mode"], {"current": 0})
+                                        hum = sg.get(steamModes.get(sg["mode"], ""), {"current": 0})
                                         cook = state.get("cook", {})
                                         timer = nodes.get("timer", {})
                                         tp = nodes.get("temperatureProbe")
