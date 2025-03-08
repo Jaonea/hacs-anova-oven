@@ -27,6 +27,11 @@ def convert_celsius_to_fahrenheit(celsius):
     fahrenheit = (float(celsius) * 9 / 5 + 32)
     return fahrenheit
 
+steamModes = {
+    "relative-humidity": "relativeHumidity",
+    "steam-percentage": "steamPercentage",
+}
+
 class AnovaOvenApi:
     """A class to handle communicating with the anova api to get devices"""
 
@@ -85,11 +90,7 @@ class AnovaOvenApi:
                                         bulbs = nodes["temperatureBulbs"]
                                         he = nodes["heatingElements"]
                                         sg = nodes["steamGenerators"]
-                                        hum = (
-                                            sg["relativeHumidity"]
-                                            if sg["mode"] == "relative-humidity"
-                                            else {"current": 0}
-                                        )
+                                        hum = steamModes.get(sg["mode"], {"current": 0})
                                         cook = state.get("cook", {})
                                         timer = nodes.get("timer", {})
                                         tp = nodes.get("temperatureProbe")
