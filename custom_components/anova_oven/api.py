@@ -146,7 +146,7 @@ class AnovaOvenApi:
                                                             ]["setpoint"].get("fahrenheit", 0),
                                                         ),
                                                         dosed=bulbs["wet"]["dosed"],
-                                                        dose_failed=bulbs["wet"].get("doseFailed", false),
+                                                        dose_failed=bulbs["wet"].get("doseFailed", False),
                                                     ),
                                                     rear_heating=APOSensor.Nodes.HeatingElement(
                                                         watts=he["rear"]["watts"],
