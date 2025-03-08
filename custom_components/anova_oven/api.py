@@ -121,12 +121,8 @@ class AnovaOvenApi:
                                                         if "current" in tp
                                                         else None,
                                                         target_temperature=Temperature(
-                                                            celsius=tp["setpoint"][
-                                                                "celsius"
-                                                            ],
-                                                            fahrenheit=tp["setpoint"][
-                                                                "fahrenheit"
-                                                            ],
+                                                            celsius=tp["setpoint"].get("celsius", 0),
+                                                            fahrenheit=tp["setpoint"].get("fahrenheit", 0),
                                                         )
                                                         if "setpoint" in tp
                                                         else None,
