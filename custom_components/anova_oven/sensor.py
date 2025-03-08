@@ -50,13 +50,10 @@ def sensor_descriptions(
     unit_of_temperature: AnovaUnitOfTemperature,
 ) -> list[SensorEntityDescription]:  # noqa: D103
     def temp_getter(x):
-        return x.celsius
-
-    match unit_of_temperature:
-        case AnovaUnitOfTemperature.FAHRENHEIT:
-
-            def temp_getter(x):
+        match unit_of_temperature:
+            case AnovaUnitOfTemperature.FAHRENHEIT:
                 return x.fahrenheit
+            return x.celsius
 
     return [
         AnovaOvenSensorEntityDescription(
@@ -149,9 +146,8 @@ def sensor_descriptions(
         ),
         AnovaOvenSensorEntityDescription(
             key="fan_speed",
-            device_class=SensorDeviceClass.POWER_FACTOR,
-            native_unit_of_measurement=PERCENTAGE,
-            state_class=SensorStateClass.MEASUREMENT,
+            device_class=SensorDeviceClass.ENUM,
+            options=["min","mid","max"],
             translation_key="fan_speed",
             value_fn=lambda data: data.sensor.nodes.fan_speed,
             extra_state_attributes={},
