@@ -177,7 +177,7 @@ class APOStage:
         fan: "APOStage.Fan"
         heating_elements: "APOStage.HeatingElements"
         exhaust_vent: "APOStage.Vent"
-        timer: Timer | None = None
+        timer: "APOStage.Timer" | None = None
         steam_generators: "APOStage.SteamGenerators" | None = None
         temperature_bulbs: "APOStage.TemperatureBulbs"
         temperature_probe: "APOStage.Probe" | None = None
