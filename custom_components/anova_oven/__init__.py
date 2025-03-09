@@ -176,8 +176,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             title=call.data.get("title"),
             description="",
-            entry={},
-            exit={},
+            entry={ conditions: { and: {} } },
+            exit={ conditions: { and: {} } },
             do=APOStage.Action(
                 type="preheat",
                 temperature_bulbs=APOStage.TemperatureBulbs(
@@ -236,7 +236,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             do=dataclasses.replace(preheat_stage.do,type="cook",timer=APOStage.Timer(
                 initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
-                entry={}
+                entry={ conditions: { and: {} } }
             )
             if timer
             else None),
@@ -252,6 +252,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 request_id=str(uuid.uuid4()),
                 payload=APOCommand.Payload(
                     payload=APOCommand.APOStartPayload(
+                        type="oven_v2",
+                        cookable_type="manual",
+                        origin_source="android",
+                        cookable_id=uuid.uuid4(),
+                        title=call.data.get("title"),
                         cook_id=f"{PLATFORM}-{uuid.uuid4()}",
                         stages=stages,
                     ),
@@ -273,6 +278,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 request_id=str(uuid.uuid4()),
                 payload=APOCommand.Payload(
                     payload=APOCommand.APOStartPayload(
+                        cooker_id=cook_id,
                         cook_id=f"{PLATFORM}-{uuid.uuid4()}",
                         stages=stages,
                     ),

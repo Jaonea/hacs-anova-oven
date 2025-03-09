@@ -123,7 +123,6 @@ class AnovaPrecisionOven:
 class APOStage:
     @dataclass
     class TemperatureSetpoint:
-        fahrenheit: int
         celsius: int
 
     @dataclass
@@ -146,6 +145,10 @@ class APOStage:
         top: "APOStage.On"
         rear: "APOStage.On"
 
+    @dataclass
+    class Conditions:
+        conditions: dict[Literal["or"] | Literal["and"], dict[str,any]]
+
     @dataclass(frozen=True)
     class Vent:
         state: str
@@ -153,7 +156,7 @@ class APOStage:
     @dataclass(frozen=True)
     class Timer:
         initial: int
-        entry: dict[Literal["or"] | Literal["and"], dict[str,any]]
+        entry: Conditions
 
     @dataclass(frozen=True)
     class Probe:
@@ -186,8 +189,8 @@ class APOStage:
 
     id: str
     do: Action
-    exit: dict[Literal["or"] | Literal["and"], dict[str,any]]
-    entry: dict[Literal["or"] | Literal["and"], dict[str,any]]
+    exit: Conditions
+    entry: Conditions
     title: str
     description: str
 
@@ -202,6 +205,11 @@ class APOCommand(Generic[P]):
     @dataclass
     class APOStartPayload:
         cook_id: str
+        cooker_id: str
+        type: str
+        cookable_type: str
+        origin_source: str
+        title: str
         stages: list[APOStage]
 
     command: str
