@@ -19,13 +19,9 @@ from .precision_oven import (
     Temperature,
     TimerTarget,
 )
-from .util import dict_keys_to_camel_case, snake_case_to_camel_case, to_dict
+from .util import dict_keys_to_camel_case, snake_case_to_camel_case, to_dict, to_fahrenheit
 
 _LOGGER = logging.getLogger(__name__)
-
-def convert_celsius_to_fahrenheit(celsius):
-    fahrenheit = (float(celsius) * 9 / 5 + 32)
-    return fahrenheit
 
 steamModes = {
     "relative-humidity": "relativeHumidity",
@@ -118,13 +114,13 @@ class AnovaOvenApi:
                                                     temperature_probe=APOSensor.Nodes.TemperatureProbe(
                                                         temperature=Temperature(
                                                             celsius=tp["current"]["celsius"],
-                                                            fahrenheit=convert_celsius_to_fahrenheit(tp["current"]["celsius"]),
+                                                            fahrenheit=to_fahrenheit(tp["current"]["celsius"]),
                                                         )
                                                         if "current" in tp
                                                         else None,
                                                         target_temperature=Temperature(
                                                             celsius=tp["setpoint"]["celsius"],
-                                                            fahrenheit=convert_celsius_to_fahrenheit(tp["setpoint"]["celsius"]),
+                                                            fahrenheit=to_fahrenheit(tp["setpoint"]["celsius"]),
                                                         )
                                                         if "setpoint" in tp
                                                         else None,
@@ -137,7 +133,7 @@ class AnovaOvenApi:
                                                             celsius=bulbs[
                                                                 bulbs["mode"]
                                                             ]["current"]["celsius"],
-                                                            fahrenheit=convert_celsius_to_fahrenheit(bulbs[
+                                                            fahrenheit=to_fahrenheit(bulbs[
                                                                 bulbs["mode"]
                                                             ]["current"]["celsius"]),
                                                         ),
@@ -145,7 +141,7 @@ class AnovaOvenApi:
                                                             celsius=bulbs[
                                                                 bulbs["mode"]
                                                             ]["setpoint"]["celsius"],
-                                                            fahrenheit=convert_celsius_to_fahrenheit(bulbs[
+                                                            fahrenheit=to_fahrenheit(bulbs[
                                                                 bulbs["mode"]
                                                             ]["setpoint"]["celsius"]),
                                                         ),
