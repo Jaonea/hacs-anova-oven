@@ -234,7 +234,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         cook_stage = dataclasses.replace(
             preheat_stage,
             id=f"{PLATFORM}-{uuid.uuid4()}",
-            type="cook",
+            do=dataclasses.replace(preheat_stage.do,type="cook"),
             timer_added=timer is not None,
             timer=APOStage.Timer(
                 initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
