@@ -234,20 +234,17 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         cook_stage = dataclasses.replace(
             preheat_stage,
             id=f"{PLATFORM}-{uuid.uuid4()}",
-            do=dataclasses.replace(preheat_stage.do,type="cook"),
-            timer=APOStage.Timer(
+            do=dataclasses.replace(preheat_stage.do,type="cook",timer=APOStage.Timer(
                 initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
                 entry={}
             )
             if timer
-            else None,
+            else None),
         )
         stages = []
         if preheat_required:
             stages.append(preheat_stage)
         stages.append(cook_stage)
-        print(stages)
-        return
 
         await api.send_command(
             APOCommand(
