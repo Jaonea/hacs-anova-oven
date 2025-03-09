@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass
-from typing import Generic, Optional, TypeVar
+from typing import Generic, Optional, TypeVar, Literal
 
 _LOGGER = logging.getLogger(__name__)
 
