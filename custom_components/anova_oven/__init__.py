@@ -176,6 +176,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             title=call.data.get("title"),
             description="",
+            entry={},
+            exit={},
             do=APOStage.Action(
                 type="preheat",
                 temperature_bulbs=APOStage.TemperatureBulbs(
