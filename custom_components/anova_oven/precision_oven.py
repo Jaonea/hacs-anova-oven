@@ -4,6 +4,8 @@ from typing import Generic, Optional, TypeVar, Literal
 
 _LOGGER = logging.getLogger(__name__)
 
+P = TypeVar("P")
+
 @dataclass
 class Temperature:
     celsius: float
