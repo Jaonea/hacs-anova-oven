@@ -176,8 +176,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             title=call.data.get("title"),
             description="",
-            entry={ conditions: { "and": {} } },
-            exit={ conditions: { "and": {} } },
+            entry={ "conditions": { "and": {} } },
+            exit={ "conditions": { "and": {} } },
             do=APOStage.Action(
                 type="preheat",
                 temperature_bulbs=APOStage.TemperatureBulbs(
@@ -236,7 +236,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             do=dataclasses.replace(preheat_stage.do,type="cook",timer=APOStage.Timer(
                 initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
-                entry={ conditions: { "and": {} } }
+                entry={ "conditions": { "and": {} } }
             )
             if timer
             else None),
