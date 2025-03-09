@@ -177,9 +177,9 @@ class APOStage:
         fan: "APOStage.Fan"
         heating_elements: "APOStage.HeatingElements"
         exhaust_vent: "APOStage.Vent"
+        temperature_bulbs: "APOStage.TemperatureBulbs"
         timer: Optional["APOStage.Timer"] = None
         steam_generators: Optional["APOStage.SteamGenerators"] = None
-        temperature_bulbs: "APOStage.TemperatureBulbs"
         temperature_probe: Optional["APOStage.Probe"] = None
 
     id: str
