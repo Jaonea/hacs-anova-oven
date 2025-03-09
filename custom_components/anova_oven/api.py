@@ -300,7 +300,7 @@ class AnovaOvenApi:
         if self._ws:
             data = dict_keys_to_camel_case(to_dict(command))
             _LOGGER.info(json.dumps(data))
-            return
+
             self._response_fut = asyncio.Future()
             await self._ws.send_json(data)
             try:
