@@ -249,6 +249,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         type="oven_v2",
                         cookable_type="manual",
                         origin_source="android",
+                        cooker_id=cook_id,
                         cookable_id=uuid.uuid4(),
                         title=call.data.get("title"),
                         cook_id=f"{PLATFORM}-{uuid.uuid4()}",
