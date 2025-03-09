@@ -155,7 +155,7 @@ class APOStage:
     @dataclass(frozen=True)
     class Timer:
         initial: int
-        entry: Dict[Literal["or"] | Literal["and"], Dict[str,any]]
+        entry: dict[Literal["or"] | Literal["and"], dict[str,any]]
 
     @dataclass(frozen=True)
     class Probe:
@@ -184,8 +184,8 @@ class APOStage:
 
     id: str
     do: Action
-    exit: Dict[Literal["or"] | Literal["and"], Dict[str,any]]
-    entry: Dict[Literal["or"] | Literal["and"], Dict[str,any]]
+    exit: dict[Literal["or"] | Literal["and"], dict[str,any]]
+    entry: dict[Literal["or"] | Literal["and"], dict[str,any]]
     title: str
     description: str
 
