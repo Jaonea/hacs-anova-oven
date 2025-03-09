@@ -145,10 +145,6 @@ class APOStage:
         rear: "APOStage.On"
 
     @dataclass(frozen=True)
-    class Fan:
-        speed: int
-
-    @dataclass(frozen=True)
     class Vent:
         state: str
 
@@ -170,17 +166,21 @@ class APOStage:
         mode: str
         relative_humidity: Setpoint
         steam_percentage: Setpoint
+        
+    @dataclass(frozen=True)
+    class Fan:
+        speed: int
 
     @dataclass(frozen=True)
     class Action:
         type: str
-        fan: Fan
-        heating_elements: HeatingElements
+        fan: "APOStage.Fan"
+        heating_elements: "APOStage.HeatingElements"
         exhaust_vent: Vent
         timer: Timer | None = None
-        steam_generators: SteamGenerators | None = None
-        temperature_bulbs: TemperatureBulbs
-        temperature_probe: Probe | None = None
+        steam_generators: "APOStage.SteamGenerators" | None = None
+        temperature_bulbs: "APOStage.TemperatureBulbs"
+        temperature_probe: "APOStage.Probe" | None = None
 
     id: str
     do: Action
