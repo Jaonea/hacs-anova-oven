@@ -155,7 +155,7 @@ class APOStage:
     @dataclass(frozen=True)
     class Timer:
         initial: int
-        entry: Conditions
+        entry: Dict[Literal["or"] | Literal["and"], Dict[str,any]]
 
     @dataclass(frozen=True)
     class Probe:
