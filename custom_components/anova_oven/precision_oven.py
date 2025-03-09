@@ -156,7 +156,7 @@ class APOStage:
     @dataclass(frozen=True)
     class Timer:
         initial: int
-        entry: Conditions
+        entry: "APOStage.Conditions"
 
     @dataclass(frozen=True)
     class Probe:
@@ -189,8 +189,8 @@ class APOStage:
 
     id: str
     do: Action
-    exit: Conditions
-    entry: Conditions
+    exit: "APOStage.Conditions"
+    entry: "APOStage.Conditions"
     title: str
     description: str
 
