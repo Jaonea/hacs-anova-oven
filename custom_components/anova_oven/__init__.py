@@ -203,8 +203,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     rear=APOStage.On(on=call.data.get("heating_rear", True)),
                 ),
                 fan=APOStage.Fan(speed=100),
-                vent=APOStage.Vent(open=False),
-                rack_position=3,
+                vent=APOStage.Vent(state="open-max"),
                 steam_generators=APOStage.SteamGenerators(
                     mode="relative-humidity" if sous_vide else "steam-percentage",
                     relative_humidity=APOStage.SteamGenerators.Setpoint(
@@ -246,6 +245,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         if preheat_required:
             stages.append(preheat_stage)
         stages.append(cook_stage)
+        print(stages)
+        return
+
         await api.send_command(
             APOCommand(
                 command="CMD_APO_START",
