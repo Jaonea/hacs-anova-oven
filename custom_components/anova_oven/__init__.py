@@ -176,8 +176,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             title=call.data.get("title"),
             description="",
-            entry={},
-            exit={},
             do=APOStage.Action(
                 type="preheat",
                 temperature_bulbs=APOStage.TemperatureBulbs(
@@ -237,7 +235,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             type="cook",
             timer_added=timer is not None,
             timer=APOStage.Timer(
-                initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"]
+                initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
+                entry={}
             )
             if timer
             else None,
