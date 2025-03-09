@@ -7,9 +7,14 @@ start_cook:
           integration: anova_oven
     sous_vide:
       required: false
-      default: false
+      default: 
       selector:
-        boolean:
+        boolean:          
+    title:
+      required: false
+      default:
+      selector:
+        text:
     target_temperature_celsius:
       required: false
       selector:

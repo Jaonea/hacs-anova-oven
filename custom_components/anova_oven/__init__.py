@@ -115,6 +115,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
         preheat_required = False  # not (temperature_probe_celsius or timer)
         user_action_required = False
+        food_detected = False
 
         match call.data.get("timer_mode"):
             case "When Preheated":
@@ -122,6 +123,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             case "Manually":
                 preheat_required = True
                 user_action_required = True
+            case "Food detected":
+                preheat_required = True
+                user_action_required = True
+                food_detected = True            
 
         match uot:
             case AnovaUnitOfTemperature.CELSIUS:
@@ -168,69 +173,68 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         "Target temprature could not exceed 212°F in souse vide mode."
                     )
         preheat_stage = APOStage(
-            step_type="stage",
             id=f"{PLATFORM}-{uuid.uuid4()}",
-            title="",
+            title=call.data.get("title"),
             description="",
-            type="preheat",
-            user_action_required=user_action_required,
-            temperature_bulbs=APOStage.TemperatureBulbs(
-                dry=APOStage.TemperatureBulb(
+            do=APOStage.Action(
+                type="preheat",
+                temperature_bulbs=APOStage.TemperatureBulbs(
+                    dry=APOStage.TemperatureBulb(
+                        setpoint=APOStage.TemperatureSetpoint(
+                            celsius=target_temperature_celsius,
+                            fahrenheit=target_temperature_fahrenheit,
+                        )
+                    )
+                    if not sous_vide
+                    else None,
+                    wet=APOStage.TemperatureBulb(
+                        setpoint=APOStage.TemperatureSetpoint(
+                            celsius=target_temperature_celsius,
+                            fahrenheit=target_temperature_fahrenheit,
+                        )
+                    )
+                    if sous_vide
+                    else None,
+                    mode="wet" if sous_vide else "dry",
+                ),
+                heating_elements=APOStage.HeatingElements(
+                    bottom=APOStage.On(on=call.data.get("heating_bottom", False)),
+                    top=APOStage.On(on=call.data.get("heating_top", False)),
+                    rear=APOStage.On(on=call.data.get("heating_rear", True)),
+                ),
+                fan=APOStage.Fan(speed=100),
+                vent=APOStage.Vent(open=False),
+                rack_position=3,
+                steam_generators=APOStage.SteamGenerators(
+                    mode="relative-humidity" if sous_vide else "steam-percentage",
+                    relative_humidity=APOStage.SteamGenerators.Setpoint(
+                        setpoint=call.data.get("target_humidity", 100 if sous_vide else 0)
+                    )
+                    if sous_vide
+                    else None,
+                    steam_percentage=APOStage.SteamGenerators.Setpoint(
+                        setpoint=call.data.get("target_humidity", 0)
+                    )
+                    if not sous_vide
+                    else None,
+                )
+                if call.data.get("target_humidity") or sous_vide
+                else None,
+                probe_added=temperature_probe_celsius is not None,
+                temperature_probe=APOStage.Probe(
                     setpoint=APOStage.TemperatureSetpoint(
-                        celsius=target_temperature_celsius,
-                        fahrenheit=target_temperature_fahrenheit,
+                        celsius=temperature_probe_celsius,
+                        fahrenheit=temperature_probe_fahrenheit,
                     )
                 )
-                if not sous_vide
+                if temperature_probe_celsius is not None
                 else None,
-                wet=APOStage.TemperatureBulb(
-                    setpoint=APOStage.TemperatureSetpoint(
-                        celsius=target_temperature_celsius,
-                        fahrenheit=target_temperature_fahrenheit,
-                    )
                 )
-                if sous_vide
-                else None,
-                mode="wet" if sous_vide else "dry",
-            ),
-            heating_elements=APOStage.HeatingElements(
-                bottom=APOStage.On(on=call.data.get("heating_bottom", False)),
-                top=APOStage.On(on=call.data.get("heating_top", False)),
-                rear=APOStage.On(on=call.data.get("heating_rear", True)),
-            ),
-            fan=APOStage.Fan(speed=100),
-            vent=APOStage.Vent(open=False),
-            rack_position=3,
-            steam_generators=APOStage.SteamGenerators(
-                mode="relative-humidity" if sous_vide else "steam-percentage",
-                relative_humidity=APOStage.SteamGenerators.Setpoint(
-                    setpoint=call.data.get("target_humidity", 100 if sous_vide else 0)
-                )
-                if sous_vide
-                else None,
-                steam_percentage=APOStage.SteamGenerators.Setpoint(
-                    setpoint=call.data.get("target_humidity", 0)
-                )
-                if not sous_vide
-                else None,
-            )
-            if call.data.get("target_humidity") or sous_vide
-            else None,
-            probe_added=temperature_probe_celsius is not None,
-            temperature_probe=APOStage.Probe(
-                setpoint=APOStage.TemperatureSetpoint(
-                    celsius=temperature_probe_celsius,
-                    fahrenheit=temperature_probe_fahrenheit,
-                )
-            )
-            if temperature_probe_celsius is not None
-            else None,
         )
         cook_stage = dataclasses.replace(
             preheat_stage,
             id=f"{PLATFORM}-{uuid.uuid4()}",
             type="cook",
-            user_action_required=user_action_required,
             timer_added=timer is not None,
             timer=APOStage.Timer(
                 initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"]

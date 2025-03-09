@@ -4,19 +4,6 @@ from typing import Generic, Optional, TypeVar
 
 _LOGGER = logging.getLogger(__name__)
 
-
-MODE_MAP = {"IDLE": "Idle", "COOK": "Cook", "LOW WATER": "Low water"}
-
-STATE_MAP = {
-    "PREHEATING": "Preheating",
-    "COOKING": "Cooking",
-    "MAINTAINING": "Maintaining",
-    "": "No state",
-}
-
-P = TypeVar("P")
-
-
 @dataclass
 class Temperature:
     celsius: float
@@ -163,11 +150,12 @@ class APOStage:
 
     @dataclass(frozen=True)
     class Vent:
-        open: bool
+        state: str
 
     @dataclass(frozen=True)
     class Timer:
         initial: int
+        entry: Conditions
 
     @dataclass(frozen=True)
     class Probe:
@@ -183,23 +171,23 @@ class APOStage:
         relative_humidity: Setpoint
         steam_percentage: Setpoint
 
-    id: str
-    title: str
-    type: str
-    temperature_bulbs: TemperatureBulbs
-    heating_elements: HeatingElements
-    fan: Fan
-    vent: Vent
-    step_type: str = "stage"
-    description: str = ""
-    user_action_required: bool = False
-    rack_position: int = 3
-    steam_generators: SteamGenerators | None = None
-    timer_added: bool = False
-    timer: Timer | None = None
-    probe_added: bool = False
-    temperature_probe: Probe | None = None
+    @dataclass(frozen=True)
+    class Action:
+        type: str
+        fan: Fan
+        heating_elements: HeatingElements
+        exhaust_vent: Vent
+        timer: Timer | None = None
+        steam_generators: SteamGenerators | None = None
+        temperature_bulbs: TemperatureBulbs
+        temperature_probe: Probe | None = None
 
+    id: str
+    do: Action
+    exit: Dict[Literal["or"] | Literal["and"], Dict[str,any]]
+    entry: Dict[Literal["or"] | Literal["and"], Dict[str,any]]
+    title: str
+    description: str
 
 @dataclass
 class APOCommand(Generic[P]):
