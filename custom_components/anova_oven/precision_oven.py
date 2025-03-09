@@ -176,7 +176,7 @@ class APOStage:
         type: str
         fan: "APOStage.Fan"
         heating_elements: "APOStage.HeatingElements"
-        exhaust_vent: Vent
+        exhaust_vent: "APOStage.Vent"
         timer: Timer | None = None
         steam_generators: "APOStage.SteamGenerators" | None = None
         temperature_bulbs: "APOStage.TemperatureBulbs"
