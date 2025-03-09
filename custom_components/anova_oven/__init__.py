@@ -182,18 +182,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 type="preheat",
                 temperature_bulbs=APOStage.TemperatureBulbs(
                     dry=APOStage.TemperatureBulb(
-                        setpoint=APOStage.TemperatureSetpoint(
-                            celsius=target_temperature_celsius,
-                            fahrenheit=target_temperature_fahrenheit,
-                        )
+                        setpoint=APOStage.TemperatureSetpoint(celsius=target_temperature_celsius)
                     )
                     if not sous_vide
                     else None,
                     wet=APOStage.TemperatureBulb(
-                        setpoint=APOStage.TemperatureSetpoint(
-                            celsius=target_temperature_celsius,
-                            fahrenheit=target_temperature_fahrenheit,
-                        )
+                        setpoint=APOStage.TemperatureSetpoint(celsius=target_temperature_celsius)
                     )
                     if sous_vide
                     else None,
