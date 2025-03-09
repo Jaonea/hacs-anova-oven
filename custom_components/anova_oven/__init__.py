@@ -219,7 +219,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 )
                 if call.data.get("target_humidity") or sous_vide
                 else None,
-                probe_added=temperature_probe_celsius is not None,
                 temperature_probe=APOStage.Probe(
                     setpoint=APOStage.TemperatureSetpoint(
                         celsius=temperature_probe_celsius,
