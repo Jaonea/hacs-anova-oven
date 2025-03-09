@@ -250,7 +250,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         cookable_type="manual",
                         origin_source="android",
                         cooker_id=cook_id,
-                        cookable_id=uuid.uuid4(),
+                        cookable_id=f"{uuid.uuid4()}",
                         title=call.data.get("title"),
                         cook_id=f"{PLATFORM}-{uuid.uuid4()}",
                         stages=stages,
