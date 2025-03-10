@@ -63,6 +63,10 @@ class AnovaOvenApi:
         attempt = 0
 
         while not self._should_stop:
+            decoded_token = decode(self.access_token)
+            if decoded_token['exp'] < time.time():
+                await self.renew_token()
+
             url = f"https://devices.anovaculinary.io/?token={self.access_token}&supportedAccessories=APO&platform={PLATFORM}"
             headers = {
                 "Sec-WebSocket-Protocol": "ANOVA_V2",
@@ -269,11 +273,6 @@ class AnovaOvenApi:
             _LOGGER.info("WS stream closed.")
             if attempt > 0:
                 raise InvalidAuth("Access Token invalid")
-
-            if not self._should_stop:
-                decoded_token = decode(self.access_token)
-                if decoded_token['exp'] < time.time():
-                    await self.renew_token()
                 await asyncio.sleep(1)
             attempt += 1
         self._ws = None
