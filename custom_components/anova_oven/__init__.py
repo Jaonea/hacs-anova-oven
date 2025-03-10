@@ -121,11 +121,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             case "When Preheated":
                 preheat_required = True
             case "Manually":
-                preheat_required = True
                 user_action_required = True
             case "Food detected":
-                preheat_required = True
-                user_action_required = True
                 food_detected = True            
 
         match uot:
@@ -172,14 +169,23 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     raise ValueError(
                         "Target temprature could not exceed 212°F in souse vide mode."
                     )
-        preheat_stage = APOStage(
+
+        stage = APOStage(
             id=f"{PLATFORM}-{uuid.uuid4()}",
             title=call.data.get("title"),
             description="",
             entry={ "conditions": { "and": {} } },
             exit={ "conditions": { "and": {} } },
             do=APOStage.Action(
-                type="preheat",
+                type="cook",
+                timer=APOStage.Timer(
+                initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
+                entry={ "conditions": { "or": 
+                { "userAction": { "=": True },
+                   **({f"nodes.temperatureBulbs.{"wet" if sous_vide else "dry"}.current.celsius": {">=": target_temperature_celsius}} if preheat_required else {}),
+                   **({"nodes.cavityCamera.isEmpty": { "=": False }} if food_detected else {})
+                   } } }
+                ),
                 temperature_bulbs=APOStage.TemperatureBulbs(
                     dry=APOStage.TemperatureBulb(
                         setpoint=APOStage.TemperatureSetpoint(celsius=target_temperature_celsius)
@@ -225,19 +231,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 else None,
                 )
         )
-        cook_stage = dataclasses.replace(
-            preheat_stage,
-            id=f"{PLATFORM}-{uuid.uuid4()}",
-            do=dataclasses.replace(preheat_stage.do,type="cook",timer=APOStage.Timer(
-                initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
-                entry={ "conditions": { "and": {} } }
-            )
-            if timer
-            else None),
-        )
+
         stages = []
-        if preheat_required:
-            stages.append(preheat_stage)
         stages.append(cook_stage)
 
         await api.send_command(
@@ -250,7 +245,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                         cookable_type="manual",
                         origin_source="android",
                         cooker_id=cook_id,
-                        cookable_id=f"{uuid.uuid4()}",
                         title=call.data.get("title"),
                         cook_id=f"{PLATFORM}-{uuid.uuid4()}",
                         stages=stages,

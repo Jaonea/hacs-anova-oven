@@ -208,7 +208,6 @@ class APOCommand(Generic[P]):
         cooker_id: str
         type: str
         cookable_type: str
-        cookable_id: str
         origin_source: str
         title: str
         stages: list[APOStage]
