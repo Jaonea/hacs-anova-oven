@@ -116,6 +116,10 @@
           "name": "Device ID",
           "description": "Id of the device."
         },
+        "title": {
+          "name": "Title",
+          "description": "Title of the step."
+        },        
         "sous_vide": {
           "name": "Sous vide",
           "description": "Enable low temperature cooking mode."
