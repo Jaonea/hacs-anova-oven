@@ -172,6 +172,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     raise ValueError(
                         "Target temprature could not exceed 212°F in souse vide mode."
                     )
+        mode = "wet" if sous_vide else "dry"
 
         stage = APOStage(
             id=f"{PLATFORM}-{uuid.uuid4()}",
@@ -186,7 +187,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     timer["minutes"] * 60 + timer["seconds"],
                     entry={"conditions": {"or":
                                           {"userAction": {"=": True},
-                                           **({f"nodes.temperatureBulbs.{"wet" if sous_vide else "dry"}.current.celsius": {">=": target_temperature_celsius}} if preheat_required else {}),
+                                           **({f"nodes.temperatureBulbs.{mode}.current.celsius": {">=": target_temperature_celsius}} if preheat_required else {}),
                                               **({"nodes.cavityCamera.isEmpty": {"=": False}} if food_detected else {})
                                            }}}
                 ),
@@ -203,7 +204,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     )
                     if sous_vide
                     else None,
-                    mode="wet" if sous_vide else "dry",
+                    mode=mode
                 ),
                 heating_elements=APOStage.HeatingElements(
                     bottom=APOStage.On(on=call.data.get(
