@@ -7,9 +7,9 @@ start_cook:
           integration: anova_oven
     sous_vide:
       required: false
-      default: 
+      default:
       selector:
-        boolean:          
+        boolean:
     title:
       required: false
       default:
@@ -91,6 +91,7 @@ start_cook:
             - Immediately
             - When Preheated
             - Manually
+            - When Food Detected
 
 start_custom_cook:
   fields:

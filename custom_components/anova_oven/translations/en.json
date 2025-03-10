@@ -140,6 +140,10 @@
                     "description": "Targer humidity.",
                     "name": "Humidity"
                 },
+                "title": {
+                    "name": "Title",
+                    "description": "Title of the step."
+                },
                 "target_temperature_celsius": {
                     "description": "Target temperature. For souce vide mode it limits to 100\u00b0C",
                     "name": "Temperature"
