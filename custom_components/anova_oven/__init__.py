@@ -190,7 +190,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                            **({f"nodes.temperatureBulbs.{mode}.current.celsius": {">=": target_temperature_celsius}} if preheat_required else {}),
                                               **({"nodes.cavityCamera.isEmpty": {"=": False}} if food_detected else {})
                                            }}}
-                ),
+                ) if timer,
                 temperature_bulbs=APOStage.TemperatureBulbs(
                     dry=APOStage.TemperatureBulb(
                         setpoint=APOStage.TemperatureSetpoint(
