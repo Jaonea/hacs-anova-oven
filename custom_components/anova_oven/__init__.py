@@ -117,6 +117,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         preheat_required = False  # not (temperature_probe_celsius or timer)
         user_action_required = False
         food_detected = False
+        food_removed = False
 
         match call.data.get("timer_mode"):
             case "When Preheated":
@@ -125,6 +126,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 user_action_required = True
             case "When Food Detected":
                 food_detected = True
+            case "When Food Removed":
+                food_removed = True
 
         match uot:
             case AnovaUnitOfTemperature.CELSIUS:
@@ -189,6 +192,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                                           {"userAction": {"=": True},
                                            **({f"nodes.temperatureBulbs.{mode}.current.celsius": {">=": target_temperature_celsius}} if preheat_required else {}),
                                               **({"nodes.cavityCamera.isEmpty": {"=": False}} if food_detected else {})
+                                              **({"nodes.cavityCamera.isEmpty": {"=": True}} if food_removed else {})
                                            }}}
                 ) if timer,
                 temperature_bulbs=APOStage.TemperatureBulbs(

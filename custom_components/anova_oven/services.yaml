@@ -92,6 +92,7 @@ start_cook:
             - When Preheated
             - Manually
             - When Food Detected
+            - When Food Removed
 
 start_custom_cook:
   fields:
