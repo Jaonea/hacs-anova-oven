@@ -64,9 +64,9 @@ class AnovaOvenApi:
 
         while not self._should_stop:
             decoded_token = decode(self.access_token)
-            _LOGGER.debug("Token exp: %s", decoded_token['exp'])
+            _LOGGER.info("Token exp: %s", decoded_token['exp'])
             if decoded_token['exp'] < time.time():
-                _LOGGER.debug("Time to renew the token")
+                _LOGGER.info("Time to renew the token")
                 await self.renew_token()
 
             url = f"https://devices.anovaculinary.io/?token={self.access_token}&supportedAccessories=APO&platform={PLATFORM}"
@@ -82,7 +82,7 @@ class AnovaOvenApi:
                     if self._should_stop:
                         break
                     try:
-                        _LOGGER.debug("Found message %s", msg)
+                        _LOGGER.info("Found message %s", msg)
                         match msg.type:
                             case aiohttp.WSMsgType.TEXT:
                                 data = json.loads(msg.data)
@@ -244,7 +244,7 @@ class AnovaOvenApi:
                                             if d["cookerId"] not in self.devices
                                         ]
                                         for device in new_devices:
-                                            _LOGGER.debug(
+                                            _LOGGER.info(
                                                 "Found device %s", device[0])
                                             oven = AnovaPrecisionOven(
                                                 cooker_id=device[0],
@@ -266,7 +266,7 @@ class AnovaOvenApi:
                             case aiohttp.WSMsgType.ERROR:
                                 break
                             case _:
-                                _LOGGER.debug(f"Unknown message type: {msg}")
+                                _LOGGER.info(f"Unknown message type: {msg}")
                         await asyncio.sleep(0)
                     except Exception as err:
                         _LOGGER.exception("Failed processing msg {msg}: {err}")
