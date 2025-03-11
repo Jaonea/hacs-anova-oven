@@ -63,7 +63,7 @@ class AnovaOvenApi:
         attempt = 0
 
         while not self._should_stop:
-            decoded_token = decode(self.access_token)
+            decoded_token = decode(self.access_token, algorith="RS256")
             _LOGGER.info("Token exp: %s", decoded_token['exp'])
             if decoded_token['exp'] < time.time():
                 _LOGGER.info("Time to renew the token")
