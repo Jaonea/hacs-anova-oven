@@ -64,7 +64,9 @@ class AnovaOvenApi:
 
         while not self._should_stop:
             decoded_token = decode(self.access_token)
+            _LOGGER.debug("Token exp: %s", decoded_token['exp'])
             if decoded_token['exp'] < time.time():
+                _LOGGER.debug("Time to renew the token")
                 await self.renew_token()
 
             url = f"https://devices.anovaculinary.io/?token={self.access_token}&supportedAccessories=APO&platform={PLATFORM}"
