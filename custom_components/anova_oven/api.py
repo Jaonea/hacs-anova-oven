@@ -64,8 +64,8 @@ class AnovaOvenApi:
 
         while not self._should_stop:
             decoded_token = decode(self.access_token, options={"verify_signature": False})
-            _LOGGER.info("Token exp: %s", decoded_token['exp'])
-            if decoded_token['exp'] < time.time():
+            _LOGGER.info("Token exp: %s", decoded_token["exp"])
+            if decoded_token["exp"] < time.time():
                 _LOGGER.info("Time to renew the token")
                 await self.renew_token()
 
@@ -94,45 +94,35 @@ class AnovaOvenApi:
                                         bulbs = nodes["temperatureBulbs"]
                                         he = nodes["heatingElements"]
                                         sg = nodes["steamGenerators"]
-                                        hum = sg.get(steamModes.get(
-                                            sg["mode"], ""), {"current": 0})
+                                        hum = sg.get(steamModes.get(sg["mode"], ""), {"current": 0})
                                         cook = state.get("cook", {})
                                         timer = nodes.get("timer", {})
                                         tp = nodes.get("temperatureProbe")
-                                        raw_stages = json.dumps(
-                                            cook.get("stages", []))
+                                        raw_stages = json.dumps(cook.get("stages", []))
 
                                         active_stage_index = None
-                                        for idx, s in enumerate(
-                                            (s for s in cook.get("stages", [])), start=1
-                                        ):
+                                        for idx, s in enumerate((s for s in cook.get("stages", [])), start=1):
                                             if s["id"] == cook.get("activeStageId"):
                                                 active_stage_index = idx
                                                 break
                                         state = APOState(
                                             sensor=APOSensor(
                                                 mode=state["state"]["mode"],
-                                                firmware_version=state["systemInfo"][
-                                                    "firmwareVersion"
-                                                ],
+                                                firmware_version=state["systemInfo"]["firmwareVersion"],
                                                 nodes=APOSensor.Nodes(
                                                     cook=APOSensor.Nodes.Cook(
-                                                        seconds_elapsed=cook.get(
-                                                            "secondsElapsed", 0
-                                                        )
+                                                        seconds_elapsed=cook.get("secondsElapsed", 0)
                                                     ),
                                                     temperature_probe=APOSensor.Nodes.TemperatureProbe(
                                                         temperature=Temperature(
                                                             celsius=tp["current"]["celsius"],
-                                                            fahrenheit=to_fahrenheit(
-                                                                tp["current"]["celsius"]),
+                                                            fahrenheit=to_fahrenheit(tp["current"]["celsius"]),
                                                         )
                                                         if "current" in tp
                                                         else None,
                                                         target_temperature=Temperature(
                                                             celsius=tp["setpoint"]["celsius"],
-                                                            fahrenheit=to_fahrenheit(
-                                                                tp["setpoint"]["celsius"]),
+                                                            fahrenheit=to_fahrenheit(tp["setpoint"]["celsius"]),
                                                         )
                                                         if "setpoint" in tp
                                                         else None,
@@ -142,24 +132,19 @@ class AnovaOvenApi:
                                                     temperature_bulbs=APOSensor.Nodes.TemperatureBulbs(
                                                         mode=bulbs["mode"],
                                                         temperature=Temperature(
-                                                            celsius=bulbs[
-                                                                bulbs["mode"]
-                                                            ]["current"]["celsius"],
-                                                            fahrenheit=to_fahrenheit(bulbs[
-                                                                bulbs["mode"]
-                                                            ]["current"]["celsius"]),
+                                                            celsius=bulbs[bulbs["mode"]]["current"]["celsius"],
+                                                            fahrenheit=to_fahrenheit(
+                                                                bulbs[bulbs["mode"]]["current"]["celsius"]
+                                                            ),
                                                         ),
                                                         target_temperature=Temperature(
-                                                            celsius=bulbs[
-                                                                bulbs["mode"]
-                                                            ]["setpoint"]["celsius"],
-                                                            fahrenheit=to_fahrenheit(bulbs[
-                                                                bulbs["mode"]
-                                                            ]["setpoint"]["celsius"]),
+                                                            celsius=bulbs[bulbs["mode"]]["setpoint"]["celsius"],
+                                                            fahrenheit=to_fahrenheit(
+                                                                bulbs[bulbs["mode"]]["setpoint"]["celsius"]
+                                                            ),
                                                         ),
                                                         dosed=bulbs["wet"]["dosed"],
-                                                        dose_failed=bulbs["wet"].get(
-                                                            "doseFailed", False),
+                                                        dose_failed=bulbs["wet"].get("doseFailed", False),
                                                     ),
                                                     rear_heating=APOSensor.Nodes.HeatingElement(
                                                         watts=he["rear"]["watts"],
@@ -175,32 +160,23 @@ class AnovaOvenApi:
                                                     ),
                                                     steam_generator=APOSensor.Nodes.SteamGenerator(
                                                         mode=sg["mode"],
-                                                        relative_humidity=hum.get(
-                                                            "current"
-                                                        ),
-                                                        target_humidity=hum.get(
-                                                            "setpoint", 0
-                                                        ),
+                                                        relative_humidity=hum.get("current"),
+                                                        target_humidity=hum.get("setpoint", 0),
                                                     ),
                                                     timer=APOSensor.Nodes.Timer(
                                                         mode=timer.get("mode"),
-                                                        initial=timer.get(
-                                                            "initial"),
-                                                        current=timer.get(
-                                                            "current"),
+                                                        initial=timer.get("initial"),
+                                                        current=timer.get("current"),
                                                     ),
                                                     lamp_on=nodes["doorLamp"]["on"],
                                                     door_closed=nodes["door"]["closed"],
-                                                    water_tank_empty=nodes["waterTank"][
-                                                        "empty"
-                                                    ],
+                                                    water_tank_empty=nodes["waterTank"]["empty"],
                                                     fan_speed=nodes["fan"]["speed"],
                                                 ),
                                             ),
                                             stages=APOState.Stages(
                                                 active=active_stage_index,
-                                                count=len(
-                                                    cook.get("stages", [])),
+                                                count=len(cook.get("stages", [])),
                                             ),
                                             raw_stages=raw_stages,
                                         )
@@ -219,22 +195,16 @@ class AnovaOvenApi:
                                                 temperature=state.sensor.nodes.temperature_probe.temperature,
                                                 target_temperature=state.sensor.nodes.temperature_probe.target_temperature,
                                             )
-                                        elif (
-                                            state.sensor.nodes.timer
-                                            and state.sensor.nodes.timer.initial
-                                        ):
+                                        elif state.sensor.nodes.timer and state.sensor.nodes.timer.initial:
                                             current_target = TimerTarget(
                                                 current=state.sensor.nodes.timer.current,
                                                 initial=state.sensor.nodes.timer.initial,
                                             )
                                         if target != current_target and (
-                                            (current_target and current_target.reached)
-                                            or current_target is None
+                                            (current_target and current_target.reached) or current_target is None
                                         ):
                                             for listener in self._listeners:
-                                                await listener.on_target_reached(
-                                                    device, target
-                                                )
+                                                await listener.on_target_reached(device, target)
                                         target = current_target
                                     case "EVENT_APO_WIFI_LIST":
                                         payload = data.get("payload")
@@ -244,8 +214,7 @@ class AnovaOvenApi:
                                             if d["cookerId"] not in self.devices
                                         ]
                                         for device in new_devices:
-                                            _LOGGER.info(
-                                                "Found device %s", device[0])
+                                            _LOGGER.info("Found device %s", device[0])
                                             oven = AnovaPrecisionOven(
                                                 cooker_id=device[0],
                                                 type=device[1],
@@ -257,8 +226,7 @@ class AnovaOvenApi:
                                     case "RESPONSE":
                                         if self._response_fut:
                                             payload = data.get("payload")
-                                            self._response_fut.set_result(
-                                                payload)
+                                            self._response_fut.set_result(payload)
                                     case _:
                                         pass
                             case aiohttp.WSMsgType.CLOSE:
@@ -286,8 +254,7 @@ class AnovaOvenApi:
 
     async def renew_token(self):
         url = f"https://securetoken.googleapis.com/v1/token?key={self.app_key}"
-        data = {"grant_type": "refresh_token",
-                "refresh_token": self.refresh_token}
+        data = {"grant_type": "refresh_token", "refresh_token": self.refresh_token}
         try:
             async with self.session.post(url, data=data) as resp:
                 res = await resp.json()

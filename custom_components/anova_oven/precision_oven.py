@@ -6,6 +6,7 @@ _LOGGER = logging.getLogger(__name__)
 
 P = TypeVar("P")
 
+
 @dataclass
 class Temperature:
     celsius: float
@@ -95,9 +96,7 @@ class ProbeTarget(Target):
     @property
     def reached(self) -> bool:
         return (
-            self.temperature
-            and self.target_temperature
-            and self.temperature.celsius >= self.target_temperature.celsius
+            self.temperature and self.target_temperature and self.temperature.celsius >= self.target_temperature.celsius
         )
 
 
@@ -147,7 +146,7 @@ class APOStage:
 
     @dataclass
     class Conditions:
-        conditions: dict[Literal["or"] | Literal["and"], dict[str,any]]
+        conditions: dict[Literal["or"] | Literal["and"], dict[str, any]]
 
     @dataclass(frozen=True)
     class Vent:
@@ -171,7 +170,7 @@ class APOStage:
         mode: str
         relative_humidity: Setpoint
         steam_percentage: Setpoint
-        
+
     @dataclass(frozen=True)
     class Fan:
         speed: int
@@ -193,6 +192,7 @@ class APOStage:
     entry: "APOStage.Conditions"
     title: str
     description: str
+
 
 @dataclass
 class APOCommand(Generic[P]):

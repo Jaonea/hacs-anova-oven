@@ -34,15 +34,11 @@ class AnovaOvenSensorEntityDescriptionMixin:
     """Describes the mixin variables for anova sensors."""
 
     value_fn: Callable[[APOSensor], float | int | str]
-    extra_state_attributes: dict[str, Callable[[APOSensor], float | int | str]] = field(
-        default_factory=dict
-    )
+    extra_state_attributes: dict[str, Callable[[APOSensor], float | int | str]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
-class AnovaOvenSensorEntityDescription(
-    SensorEntityDescription, AnovaOvenSensorEntityDescriptionMixin
-):
+class AnovaOvenSensorEntityDescription(SensorEntityDescription, AnovaOvenSensorEntityDescriptionMixin):
     """Describes a Anova sensor."""
 
 
@@ -74,9 +70,7 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(
-                data.sensor.nodes.temperature_bulbs.temperature
-            ),
+            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_bulbs.temperature),
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
@@ -85,9 +79,7 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(
-                data.sensor.nodes.temperature_bulbs.target_temperature
-            ),
+            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_bulbs.target_temperature),
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
@@ -96,11 +88,8 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(
-                data.sensor.nodes.temperature_probe.temperature
-            )
-            if data.sensor.nodes.temperature_probe
-            and data.sensor.nodes.temperature_probe.temperature
+            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_probe.temperature)
+            if data.sensor.nodes.temperature_probe and data.sensor.nodes.temperature_probe.temperature
             else None,
             extra_state_attributes={},
         ),
@@ -110,11 +99,8 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(
-                data.sensor.nodes.temperature_probe.target_temperature
-            )
-            if data.sensor.nodes.temperature_probe
-            and data.sensor.nodes.temperature_probe.target_temperature
+            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_probe.target_temperature)
+            if data.sensor.nodes.temperature_probe and data.sensor.nodes.temperature_probe.target_temperature
             else None,
             extra_state_attributes={},
         ),
@@ -148,7 +134,7 @@ def sensor_descriptions(
         AnovaOvenSensorEntityDescription(
             key="fan_speed",
             device_class=SensorDeviceClass.ENUM,
-            options=["off", "min","mid","max"],
+            options=["off", "min", "mid", "max"],
             translation_key="fan_speed",
             value_fn=lambda data: data.sensor.nodes.fan_speed,
             extra_state_attributes={},
