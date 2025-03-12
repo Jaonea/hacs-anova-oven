@@ -111,20 +111,28 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         temperature_probe_celsius = None
         temperature_probe_fahrenheit = None
 
-        preheat_required = False  # not (temperature_probe_celsius or timer)
+        immediately = False
         user_action_required = False
         food_detected = False
         food_removed = False
 
+        conditions =  {}
         match call.data.get("timer_mode"):
             case "When Preheated":
-                preheat_required = True
+                conditions[f"nodes.temperatureBulbs.{mode}.current.celsius"] = {
+                            ">=": target_temperature_celsius
+                        }
             case "Manually":
-                user_action_required = True
+                conditions["userAction"] = {"=": True},
             case "When Food Detected":
                 food_detected = True
             case "When Food Removed":
-                food_removed = True
+                conditions["nodes.cavityCamera.isEmpty": {"=": True}]
+                conditions["userAction"] = {"=": True},
+            case "Immediately":
+                conditions["nodes.cavityCamera.isEmpty": {"=": False}]
+                conditions["userAction"] = {"=": True},
+
 
         match uot:
             case AnovaUnitOfTemperature.CELSIUS:
@@ -158,24 +166,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 type="cook",
                 timer=APOStage.Timer(
                     initial=timer["hours"] * 3600 + timer["minutes"] * 60 + timer["seconds"],
-                    entry={
-                        "conditions": {
-                            "or": {
-                                "userAction": {"=": True},
-                                **(
-                                    {
-                                        f"nodes.temperatureBulbs.{mode}.current.celsius": {
-                                            ">=": target_temperature_celsius
-                                        }
-                                    }
-                                    if preheat_required
-                                    else {}
-                                ),
-                                **({"nodes.cavityCamera.isEmpty": {"=": False}} if food_detected else {})
-                                ** ({"nodes.cavityCamera.isEmpty": {"=": True}} if food_removed else {}),
-                            }
-                        }
-                    },
+                    entry={"conditions": {"or": conditions}},
                 )
                 if timer
                 else None,
