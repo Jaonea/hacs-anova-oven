@@ -116,23 +116,20 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         food_detected = False
         food_removed = False
 
-        conditions =  {}
+        conditions = {}
         match call.data.get("timer_mode"):
             case "When Preheated":
-                conditions[f"nodes.temperatureBulbs.{mode}.current.celsius"] = {
-                            ">=": target_temperature_celsius
-                        }
+                conditions[f"nodes.temperatureBulbs.{mode}.current.celsius"] = {">=": target_temperature_celsius}
             case "Manually":
-                conditions["userAction"] = {"=": True},
+                conditions["userAction"] = ({"=": True},)
             case "When Food Detected":
                 food_detected = True
             case "When Food Removed":
-                conditions["nodes.cavityCamera.isEmpty": {"=": True}]
-                conditions["userAction"] = {"=": True},
+                conditions["nodes.cavityCamera.isEmpty" : {"=": True}]
+                conditions["userAction"] = ({"=": True},)
             case "Immediately":
-                conditions["nodes.cavityCamera.isEmpty": {"=": False}]
-                conditions["userAction"] = {"=": True},
-
+                conditions["nodes.cavityCamera.isEmpty" : {"=": False}]
+                conditions["userAction"] = ({"=": True},)
 
         match uot:
             case AnovaUnitOfTemperature.CELSIUS:
