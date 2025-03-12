@@ -53,7 +53,6 @@ class AnovaOvenApi:
         self._ws: ClientWebSocketResponse | None = None
         self._response_fut: asyncio.Future | None
         self.unit_of_temperature = unit_of_temperature
-        self._last_msg = None
 
     def add_listener(self, listener: "AnovaOvenUpdateListener"):
         self._listeners.append(listener)
@@ -84,7 +83,6 @@ class AnovaOvenApi:
                         break
                     try:
                         _LOGGER.info("Found message %s", msg)
-                        self._last_msg = msg
                         match msg.type:
                             case aiohttp.WSMsgType.TEXT:
                                 data = json.loads(msg.data)
@@ -185,6 +183,7 @@ class AnovaOvenApi:
                                         device_id = payload["cookerId"]
                                         device = self.devices[device_id]
                                         device.state = state
+                                        device.raw_data = data
                                         for listener in self._listeners:
                                             await listener.on_state(device, state)
 

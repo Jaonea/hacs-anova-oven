@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass
-from typing import Generic, Optional, TypeVar, Literal
+from typing import Generic, Optional, TypeVar, Literal, Any
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -111,6 +111,8 @@ class TimerTarget(Target):
 
 
 class AnovaPrecisionOven:
+    raw_data: Any
+
     def __init__(self, cooker_id: str, type: str) -> None:
         self.cooker_id = cooker_id
         self.type = type

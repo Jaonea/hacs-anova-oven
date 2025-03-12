@@ -1,11 +1,10 @@
 """The Anova Precision Oven integration."""
 
 from __future__ import annotations
+from typing import Any
 
-import dataclasses
 import json
 import uuid
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ATTR_DEVICE_ID,
@@ -285,22 +284,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     return True
 
+
 async def async_get_device_diagnostics(
-    hass: HomeAssistant, entry: MyConfigEntry, device: DeviceEntry
+    hass: HomeAssistant, entry: ConfigEntry, device: AnovaPrecisionOven
 ) -> dict[str, Any]:
-    data = entry.data | entry.options
-    devices = [
-        AnovaPrecisionOven(
-            cooker_id=device[0],
-            type=device[1],
-        )
-        for device in data[CONF_DEVICES]
-    ]
-
-    return {
-    
-    }
-
+    return device.raw_data
 
 
 async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
