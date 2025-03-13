@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> This branch contains currently code to make it work on the Anova Precision Oven 2.0
+> This fork contains currently code to make it work on the Anova Precision Oven 2.0. If you are interested in the version 1, head to the original repository instead.
 
 # Anova Oven HA integration
 
