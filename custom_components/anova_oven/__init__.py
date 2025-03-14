@@ -243,7 +243,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 request_id=str(uuid.uuid4()),
                 payload=APOCommand.Payload(
                     payload=APOCommand.APOStartPayload(
+                        type="oven_v2",
+                        cookable_type="manual",
+                        origin_source="android",
                         cooker_id=cook_id,
+                        title="Custom stages",
                         cook_id=f"{PLATFORM}-{uuid.uuid4()}",
                         stages=stages,
                     ),
