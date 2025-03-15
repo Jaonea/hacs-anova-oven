@@ -46,6 +46,9 @@ class APOSensor:
         class Evaporator:
             watts: int
 
+        @dataclass
+        class Boiler:
+            watts: int
 
         @dataclass
         class Cook:
@@ -63,6 +66,7 @@ class APOSensor:
         temperature_probe: TemperatureProbe
         steam_generator: SteamGenerator
         evaporator: Evaporator
+        boiler: Boiler
         rear_heating: HeatingElement
         bottom_heating: HeatingElement
         top_heating: HeatingElement
