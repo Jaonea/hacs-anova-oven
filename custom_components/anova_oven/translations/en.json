@@ -46,6 +46,15 @@
             "bottom_watts": {
                 "name": "Bottom watts"
             },
+            "exhaust_vent": {
+              "name": "Exhaust Vent"
+            },
+            "steam_generator_watts": {
+              "name": "Steam Generator watts"
+            },
+            "evaporator_watts": {
+              "name": "Evaporator watts"
+            },
             "cook_time": {
                 "name": "Cook time"
             },
