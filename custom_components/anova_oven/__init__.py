@@ -182,7 +182,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                     rear=APOStage.On(on=call.data.get("heating_rear", True)),
                 ),
                 fan=APOStage.Fan(speed=100),
-                exhaust_vent=APOStage.Vent(state="open-max"),
+                exhaust_vent=APOStage.Vent(state="closed"),
                 steam_generators=APOStage.SteamGenerators(
                     mode="relative-humidity" if sous_vide else "steam-percentage",
                     relative_humidity=APOStage.SteamGenerators.Setpoint(

@@ -140,6 +140,14 @@ def sensor_descriptions(
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
+            key="exhaust_vent",
+            device_class=SensorDeviceClass.ENUM,
+            options=["open-max", "closed"],
+            translation_key="exhaust_vent",
+            value_fn=lambda data: data.sensor.nodes.fan_speed,
+            extra_state_attributes={},
+        ),
+        AnovaOvenSensorEntityDescription(
             key="steam_generator_mode",
             translation_key="steam_generator_mode",
             value_fn=lambda data: data.sensor.nodes.steam_generator.mode,
