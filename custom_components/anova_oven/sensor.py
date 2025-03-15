@@ -59,11 +59,6 @@ def sensor_descriptions(
             value_fn=lambda data: data.sensor.mode,
             extra_state_attributes={"raw_stages": lambda s: s.raw_stages},
         ),
-        # AnovaOvenSensorEntityDescription(
-        #     key="bulb_mode",
-        #     translation_key="bulb_mode",
-        #     value_fn=lambda data: data.sensor.nodes.temperature_bulbs.mode
-        # ),
         AnovaOvenSensorEntityDescription(
             key="temperature",
             translation_key="temperature",

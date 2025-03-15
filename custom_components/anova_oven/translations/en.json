@@ -46,9 +46,6 @@
             "bottom_watts": {
                 "name": "Bottom watts"
             },
-            "bulb_mode": {
-                "name": "Bulb mode"
-            },
             "cook_time": {
                 "name": "Cook time"
             },

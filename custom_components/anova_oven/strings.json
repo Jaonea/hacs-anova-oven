@@ -37,9 +37,6 @@
       "mode": {
         "name": "Mode"
       },
-      "bulb_mode": {
-        "name": "Bulb mode"
-      },
       "exhaust_vent": {
         "name": "Exhaust Vent"
       },
