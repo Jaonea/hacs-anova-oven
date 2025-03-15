@@ -166,10 +166,10 @@ class AnovaOvenApi:
                                                         watts=sg.get("watts", 0)
                                                     ),
                                                     evaporator=APOSensor.Nodes.Evaporator(
-                                                        watts=steamGenetators.get("evaporator").get("watts", 0)
+                                                        watts=sg.get("evaporator").get("watts", 0)
                                                     ),
                                                     boiler=APOSensor.Nodes.Evaporator(
-                                                        watts=steamGenetators.get("boiler").get("watts", 0)
+                                                        watts=sg.get("boiler").get("watts", 0)
                                                     ),
                                                     timer=APOSensor.Nodes.Timer(
                                                         mode=timer.get("mode"),
