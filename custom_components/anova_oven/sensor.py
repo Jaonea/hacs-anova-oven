@@ -152,12 +152,12 @@ def sensor_descriptions(
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
-            key="steam_generator_watts",
+            key="boiler_watts",
             device_class=SensorDeviceClass.POWER,
             native_unit_of_measurement=UnitOfPower.WATT,
             state_class=SensorStateClass.MEASUREMENT,
-            translation_key="steam_generator_watts",
-            value_fn=lambda data: data.sensor.nodes.steam_generator.watts,
+            translation_key="boiler_watts",
+            value_fn=lambda data: data.sensor.nodes.evaporator.watts,
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(

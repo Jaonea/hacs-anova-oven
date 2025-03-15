@@ -52,8 +52,8 @@
       "target_temperature_probe": {
         "name": "Target probe"
       },
-      "steam_generator_watts": {
-        "name": "Steam Generator watts"
+      "boiler_watts": {
+        "name": "Boiler watts"
       },
       "evaporator_watts": {
         "name": "Evaporator watts"
