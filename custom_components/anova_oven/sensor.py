@@ -135,14 +135,6 @@ def sensor_descriptions(
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
-            key="exhaust_vent",
-            device_class=SensorDeviceClass.ENUM,
-            options=["open-max", "closed"],
-            translation_key="exhaust_vent",
-            value_fn=lambda data: data.sensor.nodes.fan_speed,
-            extra_state_attributes={},
-        ),
-        AnovaOvenSensorEntityDescription(
             key="evaporator_watts",
             device_class=SensorDeviceClass.POWER,
             native_unit_of_measurement=UnitOfPower.WATT,
@@ -157,7 +149,7 @@ def sensor_descriptions(
             native_unit_of_measurement=UnitOfPower.WATT,
             state_class=SensorStateClass.MEASUREMENT,
             translation_key="boiler_watts",
-            value_fn=lambda data: data.sensor.nodes.evaporator.watts,
+            value_fn=lambda data: data.sensor.nodes.boiler.watts,
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
