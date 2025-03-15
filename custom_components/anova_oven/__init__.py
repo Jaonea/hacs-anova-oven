@@ -122,13 +122,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             case "Manually":
                 conditions["userAction"] = ({"=": True},)
             case "When Food Detected":
-                food_detected = True
+                conditions["nodes.cavityCamera.isEmpty" : {"=": False}]
+                conditions["userAction"] = ({"=": True},)
             case "When Food Removed":
                 conditions["nodes.cavityCamera.isEmpty" : {"=": True}]
                 conditions["userAction"] = ({"=": True},)
             case "Immediately":
-                conditions["nodes.cavityCamera.isEmpty" : {"=": False}]
-                conditions["userAction"] = ({"=": True},)
 
         match uot:
             case AnovaUnitOfTemperature.CELSIUS:
@@ -156,8 +155,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             id=f"{PLATFORM}-{uuid.uuid4()}",
             title=call.data.get("title"),
             description="",
-            entry={"conditions": {"and": {}}},
-            exit={"conditions": {"and": {}}},
+            exit={"conditions": {"and": {"nodes.timer.mode": {"=": "completed"}}}} if timer else {"conditions": {"and":{}}},
             do=APOStage.Action(
                 type="cook",
                 timer=APOStage.Timer(

@@ -190,8 +190,8 @@ class APOStage:
 
     id: str
     do: Action
-    exit: "APOStage.Conditions"
-    entry: "APOStage.Conditions"
+    exit: Optional["APOStage.Conditions"] 
+    entry: Optional["APOStage.Conditions"] 
     title: str
     description: str
 
