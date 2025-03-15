@@ -94,6 +94,8 @@ class AnovaOvenApi:
                                         bulbs = nodes["temperatureBulbs"]
                                         he = nodes["heatingElements"]
                                         sg = nodes["steamGenerators"]
+                                        ev = nodes["evaporator"]
+                                        exv = nodes["exhaustVent"]
                                         hum = sg.get(steamModes.get(sg["mode"], ""), {"current": 0})
                                         cook = state.get("cook", {})
                                         timer = nodes.get("timer", {})
@@ -162,6 +164,10 @@ class AnovaOvenApi:
                                                         mode=sg["mode"],
                                                         relative_humidity=hum.get("current"),
                                                         target_humidity=hum.get("setpoint", 0),
+                                                        watts=sg.get("watts", 0)
+                                                    ),
+                                                    evaporator=APOSensor.Nodes.Evaporator(
+                                                        watts=ev.get("watts", 0)
                                                     ),
                                                     timer=APOSensor.Nodes.Timer(
                                                         mode=timer.get("mode"),

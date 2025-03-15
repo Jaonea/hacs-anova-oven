@@ -40,6 +40,12 @@ class APOSensor:
             mode: str
             relative_humidity: int
             target_humidity: int
+            watts: int
+
+        @dataclass
+        class Evaporator:
+            watts: int
+
 
         @dataclass
         class Cook:
@@ -56,6 +62,7 @@ class APOSensor:
         temperature_bulbs: TemperatureBulbs
         temperature_probe: TemperatureProbe
         steam_generator: SteamGenerator
+        evaporator: Evaporator
         rear_heating: HeatingElement
         bottom_heating: HeatingElement
         top_heating: HeatingElement
