@@ -67,7 +67,6 @@ class APOSensor:
         temperature_probe: TemperatureProbe
         steam_generator: SteamGenerator
         evaporator: Evaporator
-        exhaust_vent: ExhaustVent
         boiler: Boiler
         rear_heating: HeatingElement
         bottom_heating: HeatingElement
