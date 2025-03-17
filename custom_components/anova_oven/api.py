@@ -150,26 +150,28 @@ class AnovaOvenApi:
                                                     rear_heating=APOSensor.Nodes.HeatingElement(
                                                         watts=he["rear"]["watts"],
                                                         on=he["rear"]["on"],
+                                                        usage_hours=he["rear"]["usageHours"]
                                                     ),
                                                     bottom_heating=APOSensor.Nodes.HeatingElement(
                                                         watts=he["bottom"]["watts"],
                                                         on=he["bottom"]["on"],
+                                                        usage_hours=he["bottom"]["usageHours"]
                                                     ),
                                                     top_heating=APOSensor.Nodes.HeatingElement(
                                                         watts=he["top"]["watts"],
                                                         on=he["top"]["on"],
+                                                        usage_hours=he["top"]["usageHours"]
                                                     ),
                                                     steam_generator=APOSensor.Nodes.SteamGenerator(
                                                         mode=sg["mode"],
                                                         relative_humidity=hum.get("current"),
-                                                        target_humidity=hum.get("setpoint", 0),
-                                                        watts=sg.get("watts", 0)
+                                                        target_humidity=hum.get("setpoint", 0)
                                                     ),
                                                     evaporator=APOSensor.Nodes.Evaporator(
-                                                        watts=sg.get("evaporator").get("watts", 0)
+                                                        watts=sg["evaporator"].get("watts", 0)
                                                     ),
                                                     boiler=APOSensor.Nodes.Evaporator(
-                                                        watts=sg.get("boiler").get("watts", 0)
+                                                        watts=sg["boiler"].get("watts", 0)
                                                     ),
                                                     timer=APOSensor.Nodes.Timer(
                                                         mode=timer.get("mode"),

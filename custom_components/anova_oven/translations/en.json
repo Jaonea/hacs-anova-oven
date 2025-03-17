@@ -55,6 +55,15 @@
             "evaporator_watts": {
               "name": "Evaporator watts"
             },
+            "top_usageHours": {
+                "name": "Top Usage Hours"
+            },
+            "rear_usageHours": {
+                "name": "Rear Usage Hours"
+            },
+            "bottom_usageHours": {
+                "name": "Bottom Usage Hours"
+            },
             "cook_time": {
                 "name": "Cook time"
             },

@@ -82,6 +82,15 @@
       "cook_time": {
         "name": "Cook time"
       },
+      "top_usageHours": {
+        "name": "Top Usage Hours"
+      },
+      "rear_usageHours": {
+        "name": "Rear Usage Hours"
+      },
+      "bottom_usageHours": {
+        "name": "Bottom Usage Hours"
+      },
       "timer": {
         "name": "Timer"
       },
