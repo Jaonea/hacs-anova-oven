@@ -145,22 +145,6 @@
           "name": "Sous vide",
           "description": "Enable low temperature cooking mode."
         },
-        "dry_target_temperature_celsius": {
-          "name": "Temperature",
-          "description": "Target temperature. For souce vide mode it limits to 100°C"
-        },
-        "wet_target_temperature_fahrenheit": {
-          "name": "Temperature",
-          "description": "Target temperature. For souce vide mode it limits to 212°F"
-        },
-        "dry_target_temperature_celsius": {
-          "name": "Temperature",
-          "description": "Target temperature. For souce vide mode it limits to 100°C"
-        },
-        "wet_target_temperature_fahrenheit": {
-          "name": "Temperature",
-          "description": "Target temperature. For souce vide mode it limits to 212°F"
-        },
         "target_temperature_celsius": {
           "name": "Temperature",
           "description": "Target temperature. For souce vide mode it limits to 100°C"

@@ -40,18 +40,6 @@
       }
     },
     "sensor": {
-      "dry_target_temperature_celsius": {
-        "name": "Temperature"
-      },
-      "wet_target_temperature_fahrenheit": {
-        "name": "Temperature"
-      },
-      "dry_target_temperature_celsius": {
-        "name": "Temperature"
-      },
-      "wet_target_temperature_fahrenheit": {
-        "name": "Temperature"
-      },
       "active_stage": {
         "name": "Active stage"
       },
