@@ -167,10 +167,10 @@ class AnovaOvenApi:
                                                         relative_humidity=hum.get("current"),
                                                         target_humidity=hum.get("setpoint", 0)
                                                     ),
-                                                    evaporator=APOSensor.Nodes.Evaporator(
+                                                    evaporator=APOSensor.Nodes.SteamGeneratorType(
                                                         watts=sg["evaporator"].get("watts", 0)
                                                     ),
-                                                    boiler=APOSensor.Nodes.Evaporator(
+                                                    boiler=APOSensor.Nodes.SteamGeneratorType(
                                                         watts=sg["boiler"].get("watts", 0)
                                                     ),
                                                     timer=APOSensor.Nodes.Timer(
