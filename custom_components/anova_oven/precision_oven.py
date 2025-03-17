@@ -45,7 +45,7 @@ class APOSensor:
         @dataclass
         class SteamGeneratorType:
             watts: int
-            usageHours: int
+            usage_hours: int
 
         @dataclass
         class Cook:
