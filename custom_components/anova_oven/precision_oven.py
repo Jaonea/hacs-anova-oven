@@ -43,12 +43,9 @@ class APOSensor:
             target_humidity: int
 
         @dataclass
-        class Evaporator:
+        class SteamGeneratorType:
             watts: int
-
-        @dataclass
-        class Boiler:
-            watts: int
+            usageHours: int
 
         @dataclass
         class Cook:
@@ -65,8 +62,8 @@ class APOSensor:
         temperature_bulbs: TemperatureBulbs
         temperature_probe: TemperatureProbe
         steam_generator: SteamGenerator
-        evaporator: Evaporator
-        boiler: Boiler
+        evaporator: SteamGeneratorType
+        boiler: SteamGeneratorType
         rear_heating: HeatingElement
         bottom_heating: HeatingElement
         top_heating: HeatingElement

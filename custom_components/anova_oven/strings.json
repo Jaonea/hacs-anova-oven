@@ -82,6 +82,12 @@
       "cook_time": {
         "name": "Cook time"
       },
+      "boiler_usageHours": {
+        "name": "Boiler Usage Hours"
+      },
+      "evaporator_usageHours": {
+        "name": "Evaporator Usage Hours"
+      },
       "top_usageHours": {
         "name": "Top Usage Hours"
       },
@@ -134,10 +140,26 @@
         "title": {
           "name": "Title",
           "description": "Title of the step."
-        },        
+        },
         "sous_vide": {
           "name": "Sous vide",
           "description": "Enable low temperature cooking mode."
+        },
+        "dry_target_temperature_celsius": {
+          "name": "Temperature",
+          "description": "Target temperature. For souce vide mode it limits to 100°C"
+        },
+        "wet_target_temperature_fahrenheit": {
+          "name": "Temperature",
+          "description": "Target temperature. For souce vide mode it limits to 212°F"
+        },
+        "dry_target_temperature_celsius": {
+          "name": "Temperature",
+          "description": "Target temperature. For souce vide mode it limits to 100°C"
+        },
+        "wet_target_temperature_fahrenheit": {
+          "name": "Temperature",
+          "description": "Target temperature. For souce vide mode it limits to 212°F"
         },
         "target_temperature_celsius": {
           "name": "Temperature",
