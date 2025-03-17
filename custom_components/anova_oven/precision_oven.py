@@ -41,7 +41,6 @@ class APOSensor:
             mode: str
             relative_humidity: int
             target_humidity: int
-            watts: int
 
         @dataclass
         class Evaporator:
