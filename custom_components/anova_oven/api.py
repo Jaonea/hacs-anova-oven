@@ -3,7 +3,6 @@ import json
 import logging
 import time
 from abc import ABC
-from jwt import decode
 
 import aiohttp
 from aiohttp.client_ws import ClientWebSocketResponse
@@ -63,12 +62,6 @@ class AnovaOvenApi:
         attempt = 0
 
         while not self._should_stop:
-            decoded_token = decode(self.access_token, options={"verify_signature": False})
-            _LOGGER.info("Token exp: %s", decoded_token["exp"])
-            if decoded_token["exp"] < time.time():
-                _LOGGER.info("Time to renew the token")
-                await self.renew_token()
-
             url = f"https://devices.anovaculinary.io/?token={self.access_token}&supportedAccessories=APO&platform={PLATFORM}"
             headers = {
                 "Sec-WebSocket-Protocol": "ANOVA_V2",
@@ -264,25 +257,6 @@ class AnovaOvenApi:
         self._should_stop = True
         if self._ws:
             await self._ws.close()
-
-    async def renew_token(self):
-        url = f"https://securetoken.googleapis.com/v1/token?key={self.app_key}"
-        data = {"grant_type": "refresh_token", "refresh_token": self.refresh_token}
-        try:
-            async with self.session.post(url, data=data) as resp:
-                res = await resp.json()
-                if "error" in res:
-                    raise InvalidAuth(res)
-                self.access_token = res["access_token"]
-                self.refresh_token = res["refresh_token"]
-
-                _LOGGER.info("Token refreshed.")
-
-                for listener in self._listeners:
-                    await listener.on_new_token(self.access_token, self.refresh_token)
-        except Exception as err:
-            _LOGGER.exception(f"Failed renew token: {err}")
-            raise InvalidAuth("Access Token invalid")
 
     async def get_devices(self) -> list[AnovaPrecisionOven]:
         timeout = time.time() + 5.5  # 5 seconds from now
