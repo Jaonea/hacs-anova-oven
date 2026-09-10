@@ -198,10 +198,10 @@ class APOStage:
 
     id: str
     do: Action
-    exit: Optional["APOStage.Conditions"] 
-    entry: Optional["APOStage.Conditions"] 
     title: str
     description: str
+    exit: Optional["APOStage.Conditions"] = None
+    entry: Optional["APOStage.Conditions"] = None
 
 
 @dataclass
