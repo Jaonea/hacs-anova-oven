@@ -122,7 +122,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             case "Manually":
                 conditions["userAction"] = {"=": True}
             case "When Food Detected":
-                conditions["nodes.cavityCamera.isEmpty" : {"=": False}]
+                conditions["nodes.cavityCamera.isEmpty"] = {"=": False}
                 conditions["userAction"] = {"=": True}
             case "When Food Removed":
                 conditions["nodes.cavityCamera.isEmpty" : {"=": True}]
