@@ -126,6 +126,9 @@ class AnovaPrecisionOven:
         self.type = type
         self.state: APOState | None = None
         self.temperature_unit: str = "C"
+        
+        # Local timestamp used by the calculated timer sensors.
+        self.timer_started_at: float | None = None
 
 
 @dataclass
