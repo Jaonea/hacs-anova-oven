@@ -109,6 +109,12 @@
       "timer": {
         "name": "Timer"
       },
+      "timer_elapsed": {
+        "name": "Timer elapsed"
+      },
+      "timer_remaining": {
+        "name": "Timer remaining"
+      },
       "timer_initial": {
         "name": "Timer initial"
       },
