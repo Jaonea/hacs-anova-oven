@@ -125,7 +125,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 conditions["nodes.cavityCamera.isEmpty"] = {"=": False}
                 conditions["userAction"] = {"=": True}
             case "When Food Removed":
-                conditions["nodes.cavityCamera.isEmpty" : {"=": True}
+                conditions["nodes.cavityCamera.isEmpty"] : {"=": True}
                 conditions["userAction"] = {"=": True}
 
         match uot:
