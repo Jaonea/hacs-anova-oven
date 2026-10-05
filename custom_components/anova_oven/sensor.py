@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import timedelta
 
 from homeassistant import config_entries
 from homeassistant.components.climate.const import ClimateEntityFeature
@@ -21,6 +23,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import StateType
 
 from .const import DOMAIN, AnovaUnitOfTemperature
@@ -34,17 +37,23 @@ class AnovaOvenSensorEntityDescriptionMixin:
     """Describes the mixin variables for anova sensors."""
 
     value_fn: Callable[[APOSensor], float | int | str]
-    extra_state_attributes: dict[str, Callable[[APOSensor], float | int | str]] = field(default_factory=dict)
+    extra_state_attributes: dict[
+        str, Callable[[APOSensor], float | int | str]
+    ] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
-class AnovaOvenSensorEntityDescription(SensorEntityDescription, AnovaOvenSensorEntityDescriptionMixin):
+class AnovaOvenSensorEntityDescription(
+    SensorEntityDescription, AnovaOvenSensorEntityDescriptionMixin
+):
     """Describes a Anova sensor."""
 
 
 def sensor_descriptions(
     unit_of_temperature: AnovaUnitOfTemperature,
-) -> list[SensorEntityDescription]:  # noqa: D103
+) -> list[SensorEntityDescription]:
+    """Return the Anova sensor descriptions."""
+
     def temp_getter(x):
         match unit_of_temperature:
             case AnovaUnitOfTemperature.FAHRENHEIT:
@@ -65,7 +74,9 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_bulbs.temperature),
+            value_fn=lambda data: temp_getter(
+                data.sensor.nodes.temperature_bulbs.temperature
+            ),
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
@@ -74,19 +85,22 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_bulbs.target_temperature),
+            value_fn=lambda data: temp_getter(
+                data.sensor.nodes.temperature_bulbs.target_temperature
+            ),
             extra_state_attributes={},
         ),
-
-
         AnovaOvenSensorEntityDescription(
             key="temperature_probe",
             translation_key="temperature_probe",
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_probe.temperature)
-            if data.sensor.nodes.temperature_probe and data.sensor.nodes.temperature_probe.temperature
+            value_fn=lambda data: temp_getter(
+                data.sensor.nodes.temperature_probe.temperature
+            )
+            if data.sensor.nodes.temperature_probe
+            and data.sensor.nodes.temperature_probe.temperature
             else None,
             extra_state_attributes={},
         ),
@@ -96,8 +110,11 @@ def sensor_descriptions(
             native_unit_of_measurement=unit_of_temperature,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            value_fn=lambda data: temp_getter(data.sensor.nodes.temperature_probe.target_temperature)
-            if data.sensor.nodes.temperature_probe and data.sensor.nodes.temperature_probe.target_temperature
+            value_fn=lambda data: temp_getter(
+                data.sensor.nodes.temperature_probe.target_temperature
+            )
+            if data.sensor.nodes.temperature_probe
+            and data.sensor.nodes.temperature_probe.target_temperature
             else None,
             extra_state_attributes={},
         ),
@@ -216,7 +233,9 @@ def sensor_descriptions(
             native_unit_of_measurement=PERCENTAGE,
             state_class=SensorStateClass.MEASUREMENT,
             translation_key="relative_humidity",
-            value_fn=lambda data: data.sensor.nodes.steam_generator.relative_humidity,
+            value_fn=lambda data: (
+                data.sensor.nodes.steam_generator.relative_humidity
+            ),
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
@@ -225,7 +244,9 @@ def sensor_descriptions(
             native_unit_of_measurement=PERCENTAGE,
             state_class=SensorStateClass.MEASUREMENT,
             translation_key="target_humidity",
-            value_fn=lambda data: data.sensor.nodes.steam_generator.target_humidity,
+            value_fn=lambda data: (
+                data.sensor.nodes.steam_generator.target_humidity
+            ),
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
@@ -246,6 +267,26 @@ def sensor_descriptions(
             translation_key="timer",
             device_class=SensorDeviceClass.DURATION,
             value_fn=lambda data: data.sensor.nodes.timer.current,
+            extra_state_attributes={},
+        ),
+        AnovaOvenSensorEntityDescription(
+            key="timer_elapsed",
+            state_class=SensorStateClass.MEASUREMENT,
+            native_unit_of_measurement=UnitOfTime.SECONDS,
+            icon="mdi:timer-play-outline",
+            translation_key="timer_elapsed",
+            device_class=SensorDeviceClass.DURATION,
+            value_fn=lambda data: 0,
+            extra_state_attributes={},
+        ),
+        AnovaOvenSensorEntityDescription(
+            key="timer_remaining",
+            state_class=SensorStateClass.MEASUREMENT,
+            native_unit_of_measurement=UnitOfTime.SECONDS,
+            icon="mdi:timer-sand",
+            translation_key="timer_remaining",
+            device_class=SensorDeviceClass.DURATION,
+            value_fn=lambda data: 0,
             extra_state_attributes={},
         ),
         AnovaOvenSensorEntityDescription(
@@ -289,8 +330,12 @@ async def async_setup_entry(
     """Set up Anova device."""
     coordinator: AnovaCoordinator = hass.data[DOMAIN][entry.entry_id]
     unit_of_temperature = AnovaUnitOfTemperature(
-        entry.options.get(CONF_TEMPERATURE_UNIT, AnovaUnitOfTemperature.CELSIUS)
+        entry.options.get(
+            CONF_TEMPERATURE_UNIT,
+            AnovaUnitOfTemperature.CELSIUS,
+        )
     )
+
     async_add_entities(
         AnovaOvenSensor(device[0], coordinator, description)
         for device in coordinator.devices.items()
@@ -303,6 +348,18 @@ class AnovaOvenSensor(AnovaOvenDescriptionEntity, SensorEntity):
 
     entity_description: AnovaOvenSensorEntityDescription
 
+    def __init__(
+        self,
+        cooker_id: str,
+        coordinator: AnovaCoordinator,
+        description: AnovaOvenSensorEntityDescription,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(cooker_id, coordinator, description)
+
+        self._timer_started_at: float | None = None
+        self._timer_update_unsub = None
+
     @property
     def supported_features(self):
         match self.native_unit_of_measurement:
@@ -311,12 +368,97 @@ class AnovaOvenSensor(AnovaOvenDescriptionEntity, SensorEntity):
             case AnovaUnitOfTemperature.FAHRENHEIT:
                 return ClimateEntityFeature.TARGET_HUMIDITY
 
+    async def async_added_to_hass(self) -> None:
+        """Set up periodic updates for calculated timer sensors."""
+        await super().async_added_to_hass()
+
+        if self.entity_description.key in {
+            "timer_elapsed",
+            "timer_remaining",
+        }:
+            self._timer_update_unsub = async_track_time_interval(
+                self.hass,
+                self._async_timer_update,
+                timedelta(seconds=1),
+            )
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Clean up periodic timer updates."""
+        if self._timer_update_unsub:
+            self._timer_update_unsub()
+            self._timer_update_unsub = None
+
+        await super().async_will_remove_from_hass()
+
+    async def _async_timer_update(self, _now) -> None:
+        """Update calculated timer sensors."""
+        self.async_write_ha_state()
+
     @property
     def native_value(self) -> StateType:
         """Return the state."""
-        if state := self.coordinator.devices[self.cooker_id].state:
-            if hasattr(self.entity_description, "extra_state_attributes"):
-                for k, getter in self.entity_description.extra_state_attributes.items():
-                    self._attr_extra_state_attributes[k] = getter(state)
-            return self.entity_description.value_fn(state)
-        return None
+        if not (
+            device := self.coordinator.devices.get(self.cooker_id)
+        ):
+            return None
+
+        if not device.state:
+            return None
+
+        state = device.state
+
+        if hasattr(self.entity_description, "extra_state_attributes"):
+            for k, getter in self.entity_description.extra_state_attributes.items():
+                self._attr_extra_state_attributes[k] = getter(state)
+
+        key = self.entity_description.key
+
+        if key in {"timer_elapsed", "timer_remaining"}:
+            timer = state.sensor.nodes.timer
+
+            if timer is None or timer.initial is None:
+                self._timer_started_at = None
+                return None
+
+            mode = timer.mode
+
+            # Timer is waiting to start.
+            if mode == "idle":
+                self._timer_started_at = None
+
+                if key == "timer_elapsed":
+                    return 0
+
+                return timer.initial
+
+            # Timer has completed.
+            if mode == "completed":
+                self._timer_started_at = None
+
+                if key == "timer_elapsed":
+                    return timer.initial
+
+                return 0
+
+            # Timer is actively counting down.
+            if mode == "running":
+                if self._timer_started_at is None:
+                    self._timer_started_at = time.monotonic()
+
+                elapsed = int(
+                    time.monotonic() - self._timer_started_at
+                )
+
+                elapsed = max(0, min(elapsed, timer.initial))
+                remaining = max(0, timer.initial - elapsed)
+
+                if key == "timer_elapsed":
+                    return elapsed
+
+                return remaining
+
+            # Unknown timer mode.
+            self._timer_started_at = None
+            return None
+
+        return self.entity_description.value_fn(state)
